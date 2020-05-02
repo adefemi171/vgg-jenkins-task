@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: vggtask
+    labels:
+        app: vggtask
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: vggtask
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                app: vggtask
+                tier: vggtask
+        spec:
+            containers:
+            - name: vggtask
+              image: adefemi171/vggtask:latest
+              imagePullPolicy: Always
+              ports:
+              - containerPort: 5000
+                name: vggtask
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: vggtask
+    labels:
+        app: vggtask
+spec:
+    ports:
+    - port: 5000
+      targetPort: 5000
+    selector:
+        app: vggtask
+        tier: vggtask
+    type: LoadBalancer
+
